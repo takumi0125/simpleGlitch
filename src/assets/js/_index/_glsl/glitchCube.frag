@@ -18,6 +18,8 @@ varying vec2 vUv;
 
 #pragma glslify: PI = require('../../_utils/glsl/PI.glsl')
 #pragma glslify: map = require('../../_utils/glsl/map.glsl')
+#pragma glslify: hsv2rgb = require('../../_utils/glsl/hsv2rgb.glsl')
+#pragma glslify: simplex2D = require('glsl-noise/simplex/2d')
 
 const int   oct  = 8;
 const float per  = 0.5;
@@ -87,6 +89,13 @@ void main(){
   if(color.a == 0.0) {
     discard;
   } else {
-    gl_FragColor = color;
+    gl_FragColor = vec4(hsv2rgb(vec3(
+      map(simplex2D(vec2(
+        uv.x * 0.3 + time * 0.0001,
+        uv.y * 3.0 + time * 0.0001
+      )), -1.0, 1.0, 0.2 + time * 0.0001, 0.4 + time * 0.0001, true),
+      0.8,
+      1.0
+    )), 0.8);
   }
 }

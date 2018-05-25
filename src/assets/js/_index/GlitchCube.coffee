@@ -2,15 +2,16 @@ window.glitch = window.glitch || {}
 
 import map from '../_utils/math/map'
 
-export default class GlitchPlane
+export default class GlitchCube
   _BLOCK_NOISE_TEXTURE_SIZE = 256
 
-  constructor: (@data, @width = 10, @height = 10)->
+  constructor: (@data, @width = 10, @height = 10, @depth = 10)->
     @textures = []
     @textureIndex = 0
     @numTextures = @data.length
     @numTotalImgs = 0
     @numLoadedImgs = 0
+    @animationValueIndex = 0
 
     @blockNoiseCanvas = document.createElement('canvas')
     @blockNoiseCanvas.width = _BLOCK_NOISE_TEXTURE_SIZE
@@ -26,13 +27,15 @@ export default class GlitchPlane
     @blockNoiseCanvas.style.top = '0px'
     @blockNoiseCanvas.style.left = '0px'
 
-    geometry = new THREE.PlaneGeometry @width, @height
+    geometry = new THREE.BoxGeometry @width, @height, @depth
     @material = new THREE.RawShaderMaterial
-      vertexShader: require('./_glsl/glitchPlane.vert')
-      fragmentShader: require('./_glsl/glitchPlane.frag')
+      vertexShader: require('./_glsl/glitchCube.vert')
+      fragmentShader: require('./_glsl/glitchCube.frag')
       depthTest: false
       depthWrite: false
       transparent: true
+      side: THREE.DoubleSide
+      blending: THREE.AdditiveBlending
       uniforms:
         time: { type: '1f', value: 0 }
         timeOffset: { type: '1f', value: Math.random() * 1000.0 }
@@ -43,6 +46,8 @@ export default class GlitchPlane
         randomValues: { type: '3f', value: new THREE.Vector3() }
         glitchValue: { type: '1f', value: 0 }
         imgRatio: { type: '1f', value: 0 }
+        animationValue1: { type: '1f', value: 0 }
+        animationValue2: { type: '1f', value: 0 }
 
     @mesh = new THREE.Mesh geometry, @material
 
@@ -88,9 +93,11 @@ export default class GlitchPlane
     @swapTexturesTimeline?.kill()
 
     @material.uniforms.glitchValue.value = 1
+    animationValueKey = "animationValue#{(@animationValueIndex++ % 2 + 1).toString()}";
 
     @swapTexturesTimeline = new TimelineMax()
     .to @material.uniforms.imgRatio, 0.2, { value: 1, ease: Expo.easeInOut }, 0.2
+    .to @material.uniforms[animationValueKey], 0.4, { value: 1, ease: Expo.easeOut }, 0
     .add (=> @updateBlockNoise()), 0.05
     .add (=> @updateBlockNoise()), 0.1
     .add (=> @updateBlockNoise()), 0.15
@@ -104,6 +111,7 @@ export default class GlitchPlane
       @setImgs()
       @setGlichTimer()
     ), 0.4
+    .to @material.uniforms[animationValueKey], 0.4, { value: 0, ease: Expo.easeInOut }, 0.3
     return
 
 
@@ -156,6 +164,9 @@ export default class GlitchPlane
 
 
   update: (time)->
+    @mesh.rotation.x += 0.006
+    @mesh.rotation.y += 0.01
+    @mesh.rotation.z += 0.004
     @material.uniforms.time.value = time
     @material.uniforms.randomValues.value.set(
       map Math.random(), 0, 1, -1, 1

@@ -1,14 +1,14 @@
 window.glitch = window.glitch || {}
 
-import GlitchPlane from './GlitchPlane'
+import GlitchCube from './GlitchCube'
 
 export default class Index
   constructor: ->
     @initWebGL()
-    @plane.init().then =>
+    @cube.init().then =>
       @animationId = null
       @startTime = new Date().getTime()
-      @plane.start()
+      @cube.start()
       @update()
 
 
@@ -32,15 +32,16 @@ export default class Index
     @camera = new THREE.PerspectiveCamera 45, @width / @height, 1, 1000
     @camera.position.z = 100
 
-    @plane = new GlitchPlane(
+    @cube = new GlitchCube(
       [
         { imgPath: '/assets/img/img1.png' }
         { imgPath: '/assets/img/img2.png' }
       ]
       40
       40
+      40
     )
-    @scene.add @plane.mesh
+    @scene.add @cube.mesh
 
     @raycaster = new THREE.Raycaster()
     @mouse = { x: 0, y: 0 }
@@ -60,16 +61,16 @@ export default class Index
 
     @raycaster.setFromCamera @mouse, @camera
 
-    intersects = @raycaster.intersectObjects [@plane.mesh]
+    intersects = @raycaster.intersectObjects [@cube.mesh]
 
     if intersects.length > 0
       if !@isHovered
         @isHovered = true
-        @plane.doGlitch()
+        @cube.doGlitch()
     else
       if @isHovered
         @isHovered = false
-        @plane.cancelGlitch()
+        # @cube.cancelGlitch()
 
 
   resize: (e = null)=>
@@ -85,6 +86,6 @@ export default class Index
     @animationId = requestAnimationFrame @update
 
     time = new Date().getTime() - @startTime
-    @plane.update time
+    @cube.update time
 
     @renderer.render @scene, @camera
