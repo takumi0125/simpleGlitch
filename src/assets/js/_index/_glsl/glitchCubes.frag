@@ -8,11 +8,10 @@ uniform sampler2D img1;
 uniform sampler2D img2;
 uniform sampler2D blockNoiseTexture;
 uniform float time;
-uniform float timeOffset;
 uniform float glitchValue;
 uniform float imgRatio;
 uniform vec2 resolution;
-uniform vec3 randomValues;
+uniform vec3 glitchRandomValues;
 
 varying vec2 vUv;
 
@@ -67,18 +66,18 @@ void main(){
   float posY = floor(mod(-t * 0.02, resolution.y));
   float subY = posY - uv.t * resolution.y;
   if(subY > -0.45 && subY < 0.45) {
-    uv.x += 0.004 * randomValues.x;
+    uv.x += 0.004 * glitchRandomValues.x;
   }
 
   posY = floor(mod(-t * 0.03, resolution.y));
   subY = posY - uv.t * resolution.y;
   if(subY > -0.25 && subY < 0.25) {
-    uv.x += 0.002 * randomValues.z;
+    uv.x += 0.002 * glitchRandomValues.z;
   }
 
   float r = mod(t, 10.0) * 1000.0 * uv.y;
-  uv.x += map(noise(vec2(randomValues.y * r, randomValues.x * r)), 0.0, 1.0, -1.0, 1.0, true) * 0.1 * glitchValue;
-  uv.y += map(noise(vec2(randomValues.x * r, randomValues.z * r)), 0.0, 1.0, -1.0, 1.0, true) * 0.01 * glitchValue;
+  uv.x += map(noise(vec2(glitchRandomValues.y * r, glitchRandomValues.x * r)), 0.0, 1.0, -1.0, 1.0, true) * 0.1 * glitchValue;
+  uv.y += map(noise(vec2(glitchRandomValues.x * r, glitchRandomValues.z * r)), 0.0, 1.0, -1.0, 1.0, true) * 0.01 * glitchValue;
   vec4 blockNoise = texture2D(blockNoiseTexture, vUv);
   uv.x += blockNoise.r * glitchValue * 0.3;
   uv.y += blockNoise.g * glitchValue * 0.3;
@@ -87,7 +86,7 @@ void main(){
   vec4 color2 = texture2D(img2, uv);
   vec4 color = mix(color1, color2, imgRatio);
   if(color.a == 0.0) {
-    discard;
+    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
   } else {
     gl_FragColor = vec4(hsv2rgb(vec3(
       map(simplex2D(vec2(

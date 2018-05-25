@@ -1,11 +1,12 @@
 window.glitch = window.glitch || {}
 
 import map from '../_utils/math/map'
+import InstancedBufferGeometryBuilder from './InstancedBufferGeometryBuilder'
 
 export default class GlitchCube
   _BLOCK_NOISE_TEXTURE_SIZE = 256
 
-  constructor: (@data, @width = 10, @height = 10, @depth = 10)->
+  constructor: (@data, @width = 10, @height = 10, @depth = 10, @numCols = 20, @numRows = 20, isSupportedInstancedArray = false)->
     @textures = []
     @textureIndex = 0
     @numTextures = @data.length
@@ -27,28 +28,31 @@ export default class GlitchCube
     @blockNoiseCanvas.style.top = '0px'
     @blockNoiseCanvas.style.left = '0px'
 
-    geometry = new THREE.BoxGeometry @width, @height, @depth
+    @numInstances = @numCols * @numRows
+    baseBufferGeometry = new THREE.BoxBufferGeometry @width, @height, @depth, 1, 1, 1
+    geometryBuilder = new InstancedBufferGeometryBuilder @numInstances, baseBufferGeometry, isSupportedInstancedArray
+
     @material = new THREE.RawShaderMaterial
-      vertexShader: require('./_glsl/glitchCube.vert')
-      fragmentShader: require('./_glsl/glitchCube.frag')
-      depthTest: false
-      depthWrite: false
+      vertexShader: require('./_glsl/glitchCubes.vert')
+      fragmentShader: require('./_glsl/glitchCubes.frag')
       transparent: true
-      side: THREE.DoubleSide
-      blending: THREE.AdditiveBlending
       uniforms:
         time: { type: '1f', value: 0 }
-        timeOffset: { type: '1f', value: Math.random() * 1000.0 }
         img1: { type: 't', value: null }
         img2: { type: 't', value: null }
         resolution: { type: '2f', value: new THREE.Vector2(@width, @height) }
         blockNoiseTexture: { type: 't', value: @blockNoiseTexture }
-        randomValues: { type: '3f', value: new THREE.Vector3() }
+        glitchRandomValues: { type: '3f', value: new THREE.Vector3() }
         glitchValue: { type: '1f', value: 0 }
         imgRatio: { type: '1f', value: 0 }
-        animationValue1: { type: '1f', value: 0 }
-        animationValue2: { type: '1f', value: 0 }
+        animationValue: { type: '1f', value: 0 }
+        animationCnt: { type: '1f', value: 0 }
+        numInstances: { type: '1f', value: @numInstances }
+        numCols: { type: '1f', value: @numCols }
+        numRows: { type: '1f', value: @numRows }
+        size: { type: '1f', value: @width }
 
+    geometry = geometryBuilder.getBefferGeometry()
     @mesh = new THREE.Mesh geometry, @material
 
     @swapTexturesTimeline = null
@@ -92,32 +96,34 @@ export default class GlitchCube
   swapTextures: ->
     @swapTexturesTimeline?.kill()
 
-    @material.uniforms.glitchValue.value = 1
-    animationValueKey = "animationValue#{(@animationValueIndex++ % 2 + 1).toString()}";
-
     @swapTexturesTimeline = new TimelineMax()
-    .to @material.uniforms.imgRatio, 0.2, { value: 1, ease: Expo.easeInOut }, 0.2
-    .to @material.uniforms[animationValueKey], 0.4, { value: 1, ease: Expo.easeOut }, 0
-    .add (=> @updateBlockNoise()), 0.05
-    .add (=> @updateBlockNoise()), 0.1
-    .add (=> @updateBlockNoise()), 0.15
-    .add (=> @updateBlockNoise()), 0.2
-    .add (=> @updateBlockNoise()), 0.25
-    .add (=> @updateBlockNoise()), 0.3
-    .add (=> @updateBlockNoise()), 0.35
+    .to @material.uniforms.imgRatio, 0.2, { value: 1, ease: Expo.easeInOut }, 0.6
+    .to @material.uniforms.animationValue, 0.4, { value: 1, ease: Expo.easeOut }, 0
+    .add (=>
+      @material.uniforms.glitchValue.value = 1
+      @updateBlockNoise()
+    ), 0.4
+    .add (=> @updateBlockNoise()), 0.45
+    .add (=> @updateBlockNoise()), 0.5
+    .add (=> @updateBlockNoise()), 0.55
+    .add (=> @updateBlockNoise()), 0.6
+    .add (=> @updateBlockNoise()), 0.65
+    .add (=> @updateBlockNoise()), 0.7
     .add (=>
       @material.uniforms.glitchValue.value = 0
       @material.uniforms.imgRatio.value = 0
+      @material.uniforms.animationValue.value = 0
+      @material.uniforms.animationCnt.value = (@material.uniforms.animationCnt.value + 1) % 4
       @setImgs()
-      @setGlichTimer()
-    ), 0.4
-    .to @material.uniforms[animationValueKey], 0.4, { value: 0, ease: Expo.easeInOut }, 0.3
+    ), 0.8
+
+    @setGlichTimer()
     return
 
 
   setGlichTimer: ->
     @clearGlitchTimer()
-    @glitchTimer = setTimeout (=> @swapTextures()), 5000
+    @glitchTimer = setTimeout (=> @swapTextures()), 1000
 
 
   clearGlitchTimer: ->
@@ -133,7 +139,7 @@ export default class GlitchCube
       promises.push @loadTexture d.imgPath
 
     return Promise.all(promises).then =>
-      @setImgs()
+      # @setImgs()
       return true
 
 
@@ -164,11 +170,8 @@ export default class GlitchCube
 
 
   update: (time)->
-    @mesh.rotation.x += 0.006
-    @mesh.rotation.y += 0.01
-    @mesh.rotation.z += 0.004
     @material.uniforms.time.value = time
-    @material.uniforms.randomValues.value.set(
+    @material.uniforms.glitchRandomValues.value.set(
       map Math.random(), 0, 1, -1, 1
       map Math.random(), 0, 1, -1, 1
       map Math.random(), 0, 1, -1, 1

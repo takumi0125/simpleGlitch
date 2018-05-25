@@ -1,14 +1,14 @@
 window.glitch = window.glitch || {}
 
-import GlitchCube from './GlitchCube'
+import GlitchCubes from './GlitchCubes'
 
 export default class Index
   constructor: ->
     @initWebGL()
-    @cube.init().then =>
+    @cubes.init().then =>
       @animationId = null
       @startTime = new Date().getTime()
-      @cube.start()
+      @cubes.start()
       @update()
 
 
@@ -29,55 +29,50 @@ export default class Index
     @width = @container.offsetWidth
     @height = @container.offsetHeight
 
-    @camera = new THREE.PerspectiveCamera 45, @width / @height, 1, 1000
-    @camera.position.z = 100
+    @camera = new THREE.OrthographicCamera -@width * 0.5, @width * 0.5, @height * 0.5, -@height * 0.5, 1, 10000
+    @setCameraPos()
+    setInterval (=> @setCameraPos()), 4000
 
-    @cube = new GlitchCube(
+    @camera.lookAt 0, 0, 0
+
+    isSupportedInstancedArray = @renderer.extensions.get('ANGLE_instanced_arrays')
+
+    @cubes = new GlitchCubes(
       [
         { imgPath: '/assets/img/img1.png' }
         { imgPath: '/assets/img/img2.png' }
       ]
-      40
-      40
-      40
+      120
+      120
+      120
+      20
+      20
+      isSupportedInstancedArray
     )
-    @scene.add @cube.mesh
-
-    @raycaster = new THREE.Raycaster()
-    @mouse = { x: 0, y: 0 }
+    @scene.add @cubes.mesh
 
     window.addEventListener 'resize', @resize
-    window.addEventListener 'mousemove', @mousemove
 
     @resize()
 
 
-  mousemove: (e)=>
-    x = e.clientX
-    y = e.clientY
-
-    @mouse.x = (x / @width) * 2 - 1
-    @mouse.y = -(y / @height) * 2 + 1
-
-    @raycaster.setFromCamera @mouse, @camera
-
-    intersects = @raycaster.intersectObjects [@cube.mesh]
-
-    if intersects.length > 0
-      if !@isHovered
-        @isHovered = true
-        @cube.doGlitch()
-    else
-      if @isHovered
-        @isHovered = false
-        # @cube.cancelGlitch()
+  setCameraPos: =>
+    rad = Math.PI * 2 * Math.random()
+    @camera.position.x = 200 * Math.cos(rad)
+    @camera.position.y = 400
+    @camera.position.z = 1000 * Math.sin(rad)
+    @camera.lookAt 0, 0, 0
+    return
 
 
   resize: (e = null)=>
     @width = @container.offsetWidth
     @height = @container.offsetHeight
     @renderer.setSize @width, @height
-    @camera.aspect = @width / @height
+    @camera.top = @height * 0.5
+    @camera.bottom = -@height * 0.5
+    @camera.left = -@width * 0.5
+    @camera.right = @width * 0.5
     @camera.updateProjectionMatrix()
 
 
@@ -86,6 +81,6 @@ export default class Index
     @animationId = requestAnimationFrame @update
 
     time = new Date().getTime() - @startTime
-    @cube.update time
+    @cubes.update time
 
     @renderer.render @scene, @camera
