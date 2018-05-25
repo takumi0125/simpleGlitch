@@ -9,6 +9,7 @@ export default class Index
       @animationId = null
       @startTime = new Date().getTime()
       @cubes.start()
+      @setCameraPosTimer()
       @update()
 
 
@@ -19,11 +20,6 @@ export default class Index
       alpha: true
       # antialias: true
 
-    @devicePixelRatio = window.devicePixelRatio || 1
-    @devicePixelRatio = Math.min 2, @devicePixelRatio
-    window.glitch.devicePixelRatio = @devicePixelRatio
-    @renderer.setPixelRatio @devicePixelRatio
-
     @scene = new THREE.Scene()
 
     @width = @container.offsetWidth
@@ -31,7 +27,6 @@ export default class Index
 
     @camera = new THREE.OrthographicCamera -@width * 0.5, @width * 0.5, @height * 0.5, -@height * 0.5, 1, 10000
     @setCameraPos()
-    setInterval (=> @setCameraPos()), 4000
 
     @camera.lookAt 0, 0, 0
 
@@ -55,6 +50,10 @@ export default class Index
 
     @resize()
 
+
+  setCameraPosTimer: =>
+    setInterval (=> @setCameraPos()), 4000
+    return
 
   setCameraPos: =>
     rad = Math.PI * 2 * Math.random()
