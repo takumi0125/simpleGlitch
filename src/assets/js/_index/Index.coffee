@@ -25,7 +25,7 @@ export default class Index
     @width = @container.offsetWidth
     @height = @container.offsetHeight
 
-    @camera = new THREE.OrthographicCamera -@width * 0.5, @width * 0.5, @height * 0.5, -@height * 0.5, 1, 10000
+    @camera = new THREE.OrthographicCamera -@width * 0.5, @width * 0.5, @height * 0.5, -@height * 0.5, 0.1, 10000
     @setCameraPos()
 
     @camera.lookAt 0, 0, 0
