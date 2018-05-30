@@ -34,8 +34,8 @@ export default class Index
 
     @cubes = new GlitchCubes(
       [
-        { imgPath: '/assets/img/img1.png' }
-        { imgPath: '/assets/img/img2.png' }
+        { imgPath: '../img/img1.png' }
+        { imgPath: '../img/img2.png' }
       ]
       120
       120
