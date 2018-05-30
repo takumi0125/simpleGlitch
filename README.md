@@ -6,18 +6,18 @@
 
 https://takumi0125.github.io/simpleGlitch/plane/
 
-[![simple glitch transition](https://takumi0125.github.io/simpleGlitch/plane/)](https://takumi0125.github.io/simpleGlitch/assets/img/ogpPlane.png)
+[![simple glitch transition](https://takumi0125.github.io/simpleGlitch/assets/img/ogpPlane.png)](https://takumi0125.github.io/simpleGlitch/plane/)
 
 
 ## simple glitch cube
 
 https://takumi0125.github.io/simpleGlitch/cube/
 
-[![simple glitch cube](https://takumi0125.github.io/simpleGlitch/cube/)](https://takumi0125.github.io/simpleGlitch/assets/img/ogpCube.png)
+[![simple glitch cube](https://takumi0125.github.io/simpleGlitch/assets/img/ogpCube.png)](https://takumi0125.github.io/simpleGlitch/cube/)
 
 
 ## glitch cubes march
 
 https://takumi0125.github.io/simpleGlitch/march/
 
-[![glitch cubes march](https://takumi0125.github.io/simpleGlitch/march/)](https://takumi0125.github.io/simpleGlitch/assets/img/ogpMarch.png)
+[![glitch cubes march](https://takumi0125.github.io/simpleGlitch/assets/img/ogpMarch.png)](https://takumi0125.github.io/simpleGlitch/march/)
