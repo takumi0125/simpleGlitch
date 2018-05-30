@@ -5,17 +5,17 @@ config =
 
     showOGP: true # ogpタグを表示するかどうか
 
-    siteTitle: 'simple glich cube | simple glitch'
+    siteTitle: 'simple glitch cube | simple glitch'
     useTitleAsOgTitle: true # ogTitleをtitleと同じにするかどうか
     ogTitle: ''
     useTitleSeparater: true
     titleSeparater: ' | '
 
-    description: "simple glich cube with 2 types of interaction."
+    description: "simple glitch cube with 2 types of interaction."
     useDescriptionAsOgDescription: true # ogDescriptionをdescriptionと同じにするかどうか
     ogDescription: ""
 
-    ogSiteName: 'simple glich cube | simple glitch'
+    ogSiteName: 'simple glitch cube | simple glitch'
 
     ogImage: 'https://takumi0125.github.io/simpleGlitch/assets/img/ogpCube.png'
     ogImageType: 'image/png'
