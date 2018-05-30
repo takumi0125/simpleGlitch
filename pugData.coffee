@@ -1,23 +1,23 @@
 config =
   default:
-    siteUrl: 'https://dev.sample.jp/'
-    keywords: 'sample keywords'
+    siteUrl: 'https://takumi0125.github.io/simpleGlitch/march/'
+    keywords: 'webgl, threejs, glitch'
 
     showOGP: true # ogpタグを表示するかどうか
 
-    siteTitle: 'sample'
+    siteTitle: 'glitch cubes march | simple glitch'
     useTitleAsOgTitle: true # ogTitleをtitleと同じにするかどうか
     ogTitle: ''
     useTitleSeparater: true
     titleSeparater: ' | '
 
-    description: "sample description."
+    description: "glitch cubes march"
     useDescriptionAsOgDescription: true # ogDescriptionをdescriptionと同じにするかどうか
     ogDescription: ""
 
-    ogSiteName: 'sample'
+    ogSiteName: 'glitch cubes march | simple glitch'
 
-    ogImage: 'https://dev.sample.jp/assets/img/ogp.png'
+    ogImage: 'https://takumi0125.github.io/simpleGlitch/assets/img/ogpMarch.png'
     ogImageType: 'image/png'
     ogImageWidth: '1200'
     ogImageHeight: '630'
@@ -51,16 +51,16 @@ config =
     manifestJson: '/assets/img/icon/manifest.json'
 
   develop:
-    siteUrl: 'https://dev.sample.jp/'
-    ogImage: 'https://dev.sample.jp/assets/img/ogp.png'
+    siteUrl: 'https://takumi0125.github.io/simpleGlitch/march/'
+    ogImage: 'https://takumi0125.github.io/simpleGlitch/assets/img/ogpMarch.png'
 
   staging:
-    siteUrl: 'https://stg.sample.jp/'
-    ogImage: 'https://stg.sample.jp/assets/img/ogp.png'
+    siteUrl: 'https://takumi0125.github.io/simpleGlitch/march/'
+    ogImage: 'https://takumi0125.github.io/simpleGlitch/assets/img/ogpMarch.png'
 
   production:
-    siteUrl: 'https://sample.jp/'
-    ogImage: 'https://sample.jp/assets/img/ogp.png'
+    siteUrl: 'https://takumi0125.github.io/simpleGlitch/march/'
+    ogImage: 'https://takumi0125.github.io/simpleGlitch/assets/img/ogpMarch.png'
 
 
 module.exports = (env) ->
