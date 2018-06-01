@@ -62,21 +62,20 @@ float noise(vec2 p){
 
 void main(){
   vec2 uv = vUv;
-  float t = time;
 
-  float posY = floor(mod(-t * 0.02, resolution.y));
+  float posY = floor(mod(-time * 0.02, resolution.y));
   float subY = posY - uv.t * resolution.y;
   if(subY > -0.45 && subY < 0.45) {
     uv.x += 0.004 * randomValues.x;
   }
 
-  posY = floor(mod(-t * 0.03, resolution.y));
+  posY = floor(mod(-time * 0.03, resolution.y));
   subY = posY - uv.t * resolution.y;
   if(subY > -0.25 && subY < 0.25) {
     uv.x += 0.002 * randomValues.z;
   }
 
-  float r = mod(t, 10.0) * 1000.0 * uv.y;
+  float r = mod(time, 10.0) * 1000.0 * uv.y;
   uv.x += map(noise(vec2(randomValues.y * r, randomValues.x * r)), 0.0, 1.0, -1.0, 1.0, true) * 0.1 * glitchValue;
   uv.y += map(noise(vec2(randomValues.x * r, randomValues.z * r)), 0.0, 1.0, -1.0, 1.0, true) * 0.01 * glitchValue;
   vec4 blockNoise = texture2D(blockNoiseTexture, vUv);

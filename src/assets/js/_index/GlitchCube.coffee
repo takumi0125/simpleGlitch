@@ -158,8 +158,8 @@ export default class GlitchCube
       texture.wrapT = THREE.RepeatWrapping
       texture.minFilter = THREE.LinearFilter
       texture.magFilter = THREE.LinearFilter
-      texture.wrapS = THREE.MirroredRepeatWrapping
-      texture.wrapT = THREE.MirroredRepeatWrapping
+      texture.wrapS = THREE.RepeatWrapping
+      texture.wrapT = THREE.RepeatWrapping
       @textures.push texture
 
 
