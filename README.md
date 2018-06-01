@@ -2,21 +2,21 @@
 
 タスクランナーの使用方法は https://github.com/takumi0125/gulp-static-website-v5
 
-## simple glitch transition
+## simple glitch transition (plane branch)
 
 https://takumi0125.github.io/simpleGlitch/plane/
 
 [![simple glitch transition](https://takumi0125.github.io/simpleGlitch/assets/img/ogpPlane.png)](https://takumi0125.github.io/simpleGlitch/plane/)
 
 
-## simple glitch cube
+## simple glitch cube (cube branch)
 
 https://takumi0125.github.io/simpleGlitch/cube/
 
 [![simple glitch cube](https://takumi0125.github.io/simpleGlitch/assets/img/ogpCube.png)](https://takumi0125.github.io/simpleGlitch/cube/)
 
 
-## glitch cubes march
+## glitch cubes march (master branch)
 
 https://takumi0125.github.io/simpleGlitch/march/
 
